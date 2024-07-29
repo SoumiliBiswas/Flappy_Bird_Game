@@ -156,17 +156,8 @@ function moveBird(e) {
             gameOver = false;
         }
     }
-    canvas.addEventListener('touchstart', (e)=> {
-        e.preventDefault();
-
-        velocityY = -6;
-    if (gameOver) {
-        bird.y = birdY;
-        pipeArray = [];
-        score = 0;
-        gameOver = false;
-    }
-    });
+    
+    
 }
 
 function detectCollision(a, b) {
