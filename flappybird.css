@@ -1,0 +1,16 @@
+body{
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    /*background-color: rgb(85, 218, 194) ; */
+    background-image: linear-gradient(120deg,rgb(242, 252, 220), rgb(110, 216, 195) , rgb(18, 140, 181));
+    height: auto;
+    background-attachment: fixed;
+    background-size: cover;
+    
+
+}
+
+#board{
+    /* background-color: aqua; */
+    background-image: url("./images/flappybirdbg.png");
+}
