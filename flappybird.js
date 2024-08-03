@@ -36,6 +36,7 @@ let velocityY = 0; //bird jump speed
 let gravity = 0.4;
 let gameOver = false;
 let score = 0;
+let highScore = 0;
 
 window.onload = function() {
     board = document.getElementById("board");
@@ -62,6 +63,11 @@ window.onload = function() {
 
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //1.5sec
+    
+    // Add event listener for touchstart
+    document.addEventListener("touchstart", handleTouch);
+
+    // Existing keyboard event listener
     document.addEventListener("keydown", moveBird);
 }
 
@@ -100,18 +106,25 @@ function update() {
     pipeArray.shift();
    } 
 
+   //score
+   context.fillStyle = "white";
+   context.font = "45px sans-serif";
+   context.fillText(score,5,45);
 
-    //score
-    context.fillStyle = "white";
-    context.font = "45px sans-serif";
-    context.fillText(score,5,45);
 
     if (gameOver) {
-        context.fillText("GAME OVER!",60,340);
+        if (score > highScore) {
+            highScore = score;
+        }
+        context.fillText("GAME OVER!",60,340,240);
+        context.fillStyle = "yellow";
+        context.font = "29px sans-serif";
+        context.fillText("High Score: " + highScore, 5, 85); // Display high score
         context.fillStyle = "gray";
         context.font = "15px sans-serif";
         context.fillText("Press Space Key to Reset",80,360);
     }
+    
 }
 
 function placePipes() {
@@ -143,6 +156,16 @@ function placePipes() {
     pipeArray.push(bottomPipe);
 }
 
+function handleTouch(e) {
+    // Trigger the same action as the space key
+    velocityY = -6;
+    if (gameOver) {
+        bird.y = birdY;
+        pipeArray = [];
+        score = 0;
+        gameOver = false;
+    }
+}
 
 function moveBird(e) {
     if (e.code == "Space" || e.code == "ArrowUp" || e.code == "KeyX")
