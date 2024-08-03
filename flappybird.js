@@ -37,6 +37,16 @@ let gravity = 0.4;
 let gameOver = false;
 let score = 0;
 let highScore = 0;
+let collisionSound = new Audio('./sounds/sfx_hit.wav');
+let scoreSound = new Audio('./sounds/sfx_point.wav');
+let fall = new Audio('./sounds/sfx_swooshing.wav');
+
+// Global scope
+let bgm = new Audio('./sounds/bgm.wav');
+bgm.loop = true; // Ensure the music loops during the game
+
+
+
 
 window.onload = function() {
     board = document.getElementById("board");
@@ -54,6 +64,7 @@ window.onload = function() {
     birdImg.onload = function() {
         context.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
     }
+    
 
     topPipeImg = new Image();
     topPipeImg.src = "./images/toppipe.png";
@@ -61,9 +72,13 @@ window.onload = function() {
     bottompipeImg = new Image();
     bottompipeImg.src = "./images/bottompipe.png";
 
+    bgm.currentTime = 0; // Reset music to the beginning
+    bgm.play(); // Play the background music
+        // Existing game initialization code...
+
     requestAnimationFrame(update);
     setInterval(placePipes, 1500); //1.5sec
-    
+
     // Add event listener for touchstart
     document.addEventListener("touchstart", handleTouch);
 
@@ -74,6 +89,7 @@ window.onload = function() {
 function update() {
     requestAnimationFrame(update);
     if(gameOver) {
+        bgm.pause(); // Stop the background music
         return;
     }
     context.clearRect(0, 0, board.width, board.height);
@@ -85,6 +101,8 @@ function update() {
 
     if(bird.y > board.height) {
         gameOver = true;
+        fall.play();
+        bgm.pause();
     }
     //pipes
     for(let i=0; i < pipeArray.length; i++) {
@@ -95,12 +113,16 @@ function update() {
         if(!pipe.passed && bird.x > pipe.x + pipe.width) {
             score += 0.5;
             pipe.passed = true;  
+            scoreSound.play();
         }
 
         if(detectCollision(bird, pipe)) {
            gameOver = true; 
+           collisionSound.play();
+           bgm.pause();
         }
     }
+
     // clear pipes
    while(pipeArray.length > 0 && pipeArray[0].x < -pipeWidth) {
     pipeArray.shift();
@@ -164,6 +186,8 @@ function handleTouch(e) {
         pipeArray = [];
         score = 0;
         gameOver = false;
+        bgm.currentTime = 0;
+        bgm.play();
     }
 }
 
@@ -177,6 +201,8 @@ function moveBird(e) {
             pipeArray = [];
             score = 0;
             gameOver = false;
+            bgm.currentTime = 0;
+            bgm.play();
         }
     }
     
